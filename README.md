@@ -6,7 +6,7 @@
 
 ## ⚙️ Wspólna Logika Projektowa
 
-Wszystkie skrypty w tym repozytorium korzystają z ujednoliconego zestawu parametrów. Dzięki temu projektowanie całych przekładni jest intuicyjne – zębatki o tym samym **module (m)** i odpowiedniej **liczbie zębów (z)** zawsze będą do siebie pasować, niezależnie od typu zębatki.
+Wszystkie skrypty w tym repozytorium korzystają z ujednoliconego zestawu parametrów. Dzięki temu projektowanie całych przekładni jest intuicyjne – zębatki o tym samym **module (m)** zawsze będą do siebie pasować, niezależnie od typu zębatki.
 
 ### Kluczowe Funkcje:
 * **Pionowe Okienka Ulżeniowe**: Nawet w zębatkach skośnych i daszkowych (V), otwory ulżeniowe są wycinane pionowo. Eliminuje to nawisy (overhangs) i ułatwia druk 3D bez podpór.
