@@ -1,7 +1,7 @@
 // ==========================================
 // SEKCJA 1: PARAMETRY WEJŚCIOWE
 // ==========================================
-m = 1;                  // Moduł
+m = 0.5;                  // Moduł
 z = 60;                 // Liczba zębów
 grubosc = 7;            // Wysokość zębatki [mm]
 otwor_os = 22;          // Średnica otworu na oś [mm]
