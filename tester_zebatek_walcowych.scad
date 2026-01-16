@@ -34,7 +34,7 @@ r_kolnierza = r_o + s_po;
 // Rozstaw osi: suma promieni podziałowych
 odleglosc_osiowa = r_z1 + r_z2; 
 
-// Obliczenia pozycji z
+// Obliczenia pozycji z podkładki
 poz_z_podkladki = (h_p / 2) + (h_po / 2);
 // Trzpień musi być przesunięty o połowę grubości podstawy + całą podkładkę + połowę swojej wysokości
 poz_z_trzpienia = (h_p / 2) + h_po + (h_o / 2);
