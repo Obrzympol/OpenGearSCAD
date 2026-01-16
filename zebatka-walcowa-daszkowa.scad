@@ -2,8 +2,9 @@
 // SEKCJA 1: PARAMETRY WEJŚCIOWE
 // ==========================================
 m = 1;                  // Moduł
-z = 30;                 // Liczba zębów
-grubosc_calkowita = 14; // Całkowita wysokość zębatki (V)
+z = 30; 				// Liczba zębów
+grobosc_warstwy = 0.2;	// Grobosc warstwy wydruku
+grubosc_calkowita = 7;	// Całkowita wysokość zębatki (V)
 otwor_os = 8;           // Średnica otworu na oś
 kat_skosu = 25;         // Kąt pochylenia zębów (beta)
 $fn = 100;              
@@ -62,7 +63,7 @@ difference() {
 
 module polowa_zebatki_pelna(skret, wys) {
     // Slices decyduje o gładkości skosu zęba
-    linear_extrude(height = wys, twist = skret, slices = 60)
+    linear_extrude(height = wys, twist = skret, slices = grobosc_warstwy / grobosc_calkowita)
     union() {
         circle(r = r_f + 0.2); // Rdzeń wrastający w zęby
         for (i = [0 : z - 1]) {
