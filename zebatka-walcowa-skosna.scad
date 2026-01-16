@@ -3,8 +3,8 @@
 // ==========================================
 m = 1;                  // Moduł
 z = 30;                 // Liczba zębów
-grobosc = war
-grubosc = 10;           // Wysokość zębatki [mm]
+grubosc = 7;			// Wysokość zębatki [mm]
+grobosc_warstwy = 0.2;	// Wysokość warstwy wydruku
 otwor_os = 8;           // Średnica otworu na oś
 kat_skosu = 15;         // Kąt pochylenia zębów (beta)
 $fn = 100;              
@@ -35,7 +35,7 @@ delta = gamma + (inv_alfa * 180 / PI);
 
 difference() {
     // 1. SKRĘCONA BRYŁA ZĘBÓW
-    linear_extrude(height = grubosc, center = true, twist = stopnie_skretu, slices = 1)
+    linear_extrude(height = grubosc, center = true, twist = stopnie_skretu, grobosc / grobosc_warstwy)
     union() {
         circle(r = r_f + 0.2); // Rdzeń
         for (i = [0 : z - 1]) {

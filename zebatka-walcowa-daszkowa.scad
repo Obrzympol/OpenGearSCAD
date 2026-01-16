@@ -3,7 +3,7 @@
 // ==========================================
 m = 1;                  // Moduł
 z = 30; 				// Liczba zębów
-grobosc_warstwy = 0.2;	// Grobosc warstwy wydruku
+grobosc_warstwy = 0.2;	// Wysokość warstwy wydruku
 grubosc_calkowita = 7;	// Całkowita wysokość zębatki (V)
 otwor_os = 8;           // Średnica otworu na oś
 kat_skosu = 25;         // Kąt pochylenia zębów (beta)
