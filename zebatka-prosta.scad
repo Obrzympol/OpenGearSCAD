@@ -1,94 +1,119 @@
 // ==========================================
 // SEKCJA 1: PARAMETRY WEJŚCIOWE
 // ==========================================
-// Moduł: decyduje o wielkości zęba (im większy, tym ząb potężniejszy)
-m = 0.5;            
-// Liczba zębów: decyduje o średnicy całego koła
-z = 60;     
-// Grubość (wysokość) zębatki w osi Z
-grubosc = 7;  
-// Średnica otworu na wałek/oś silnika
-otwor_os = 8;    
-// Jakość: liczba ścianek w okręgach (im więcej, tym gładszy model)
-$fn = 100;          
+m = 1;                // Moduł (wielkość zęba)
+z = 60;                 // Liczba zębów
+grubosc = 7;            // Wysokość zębatki [mm]
+otwor_os = 8;           // Średnica otworu na oś [mm]
+$fn = 100;              // Jakość renderowania okręgów
+
+// PARAMETRY KONSTRUKCYJNE:
+wartosc_sciecia = 0.15; // Szerokość płaskiego czubka [mm]
+margines = 3.0;         // Bezpieczna ścianka tarczy i szprych [mm]
+steps = 20;             // Gładkość boku zęba (ewolwenty)
+liczba_okienek = 5;      // Liczba trapezowych wycięć
 
 // ==========================================
-// SEKCJA 2: OBLICZENIA INŻYNIERYJNE
+// SEKCJA 2: OBLICZENIA GEOMETRYCZNE
 // ==========================================
-d  = m * z;         // Średnica podziałowa: miejsce, gdzie zęby stykają się z drugim kołem
-da = d + 2 * m;     // Średnica wierzchołkowa: zewnętrzna krawędź zębów
-df = d - 2.5 * m;   // Średnica stóp: dno zębów (podstawa)
-s  = (PI * m) / 2;  // Teoretyczna szerokość zęba (tzw. grubości łuku)
+alfa = 20;                      // Kąt przyporu
+r = (m * z) / 2;                // Promień podziałowy
+r_b = r * cos(alfa);            // Promień koła bazowego
+r_f = r - 1.25 * m;             // Promień stóp (dno zębów)
 
-// Promienie pomocnicze
-r_stop = df / 2;    // Promień rdzenia (do dna zębów)
-r_os = otwor_os / 2; 
-h_zeba = (da - df) / 2; // Wysokość zęba od dna do czubka
-overlap = 1;        // "Zakładka" wpuszczająca ząb w rdzeń (usuwa szpary)
-h_podzialowa = (d/2) - r_stop; // Wysokość punktu styku (linia podziałowa)
+// Korekta promienia wierzchołkowego dla płaskiego czubka
+r_a = (r + m) - (wartosc_sciecia * 0.8); 
 
-// ==========================================
-// SEKCJA 3: AUTOMATYKA OTWORÓW ULŻENIOWYCH
-// ==========================================
-promien_rozmieszczenia = (r_stop + r_os) / 2; // Środek tarczy między osią a zębami
-miejsce_na_tarczy = r_stop - r_os;           // Ile mamy wolnego miejsca na dziury
-srednica_otworu = miejsce_na_tarczy * 0.6;    // Dziura zajmie 60% miejsca (bezpieczne ścianki)
+// Matematyka ewolwenty
+inv_alfa = tan(alfa) - (alfa * PI / 180);
+gamma = 90 / z; 
+delta = gamma + (inv_alfa * 180 / PI);
 
-// Obliczanie liczby otworów na podstawie obwodu (rozstawienie co ok. 1.8 średnicy)
-obwod_rozmieszczenia = 2 * PI * promien_rozmieszczenia;
-liczba_otworow = floor(obwod_rozmieszczenia / (srednica_otworu * 1.8));
+function involute(rb, t) = [
+    rb * (cos(t) + (t * PI / 180) * sin(t)),
+    rb * (sin(t) - (t * PI / 180) * cos(t))
+];
 
 // ==========================================
-// SEKCJA 4: DEFINICJA KSZTAŁTU ZĘBA (PROFIL)
-// ==========================================
-s_czubek = 0.4 * m;  // Szerokość na samym czubku (węższa, by łatwiej wchodził)
-s_podst = s * 0.85;  // Szerokość u podstawy (solidna baza)
-s_polowa = s / 2;    // Szerokość s/2 (od osi), co daje łącznie 's' na linii podziałowej
-
-// ==========================================
-// SEKCJA 5: BUDOWA BRYŁY 3D (LOGIKA CSG)
+// SEKCJA 3: BUDOWA BRYŁY (GŁÓWNY PROGRAM)
 // ==========================================
 
-// 'difference' odejmuje wszystko poniżej pierwszego obiektu
 difference() {
-    
-    // 'union' łączy rdzeń i wszystkie zęby w jedną bryłę
     union() {
-        // Rdzeń (główny krążek koła)
-        cylinder(r = r_stop, h = grubosc, center = true);
+        // 1. Rdzeń tarczy
+        cylinder(r = r_f, h = grubosc, center = true);
 
-        // Pętla tworząca 'z' zębów dookoła koła
+        // 2. Generowanie wieńca zębów
         for (i = [0 : z - 1]) {
-            rotate([0, 0, i * (360 / z)])  // Obrót o kąt wynikający z liczby zębów
-            translate([r_stop, 0, 0])      // Przesunięcie na krawędź rdzenia
-            linear_extrude(height = grubosc, center = true) // Wyciągnięcie w 3D
-            
-            // Rysowanie precyzyjnego kształtu zęba punkt po punkcie
-            polygon(points = [
-                [-overlap, -s_podst],     // Punkt wewnątrz rdzenia (lewy)
-                [0,        -s_podst],     // Podstawa (lewa)
-                [h_podzialowa, -s_polowa],// Punkt styku (lewy) - tu szerokość to 's'
-                [h_zeba,   -s_czubek/2],  // Czubek (lewy)
-                
-                [h_zeba,    s_czubek/2],  // Czubek (prawy)
-                [h_podzialowa,  s_polowa],// Punkt styku (prawy)
-                [0,         s_podst],     // Podstawa (prawa)
-                [-overlap,  s_podst]      // Punkt wewnątrz rdzenia (prawy)
-            ]);
+            rotate([0, 0, i * (360 / z)])
+                linear_extrude(height = grubosc, center = true)
+                    profil_zeba_ewolwentowy();
         }
     }
 
-    // --- ELEMENTY WYCINANE (ODEJMOWANE) ---
-
-    // 1. Otwór centralny na oś
+    // 3. Otwór na oś
     cylinder(d = otwor_os, h = grubosc + 2, center = true);
 
-    // 2. Inteligentne otwory ulżeniowe (jeśli jest na nie miejsce)
-    if (miejsce_na_tarczy > 4 && liczba_otworow >= 3) {
-        for (j = [0 : liczba_otworow - 1]) {
-            rotate([0, 0, j * (360 / liczba_otworow)])
-            translate([promien_rozmieszczenia, 0, 0])
-            cylinder(d = srednica_otworu, h = grubosc + 2, center = true);
+    // 4. Zaokrąglone wycięcia trapezowe
+    generuj_okienka_trapezowe();
+}
+
+// ==========================================
+// SEKCJA 4: MODUŁY POMOCNICZE
+// ==========================================
+
+module profil_zeba_ewolwentowy() {
+    t_start = sqrt(max(0, pow(r_f/r_b, 2) - 1)) * 180 / PI;
+    t_end   = sqrt(max(0, pow(r_a/r_b, 2) - 1)) * 180 / PI;
+
+    // Punkty ewolwentowe lewej strony (obrócone pionowo)
+    pts_L = [for (i=[0:steps]) 
+        let(t = t_start + (t_end - t_start) * (i/steps))
+        let(p = involute(r_b, t))
+        let(rx = p[1], ry = p[0]) 
+        [ rx * cos(delta) - ry * sin(delta), 
+          rx * sin(delta) + ry * cos(delta) ]
+    ];
+
+    // Odbicie lustrzane dla prawej strony
+    pts_P = [for (i=[steps:-1:0]) [-pts_L[i][0], pts_L[i][1]]];
+
+    polygon(concat(pts_L, pts_P));
+}
+
+module generuj_okienka_trapezowe() {
+    r_os = otwor_os / 2;
+    r_wew = r_os + margines;     
+    r_zew = r_f - margines;      
+    
+    // Sprawdzenie, czy jest sens robić wycięcia
+    if (r_zew > r_wew + 2) {
+        for (j = [0 : liczba_okienek - 1]) {
+            rotate([0, 0, j * (360 / liczba_okienek)])
+            
+            linear_extrude(height = grubosc + 2, center = true)
+            // Magiczna funkcja offset tworzy zaokrąglone rogi wycięcia
+            offset(r = 1.2, $fn=30) 
+            offset(r = -1.2)
+            
+            intersection() {
+                // Ograniczenie góra/dół (pierścień)
+                difference() {
+                    circle(r = r_zew);
+                    circle(r = r_wew);
+                }
+                
+                // Ograniczenie lewo/prawo (klin kątowy)
+                // Obliczamy kąt szprychy tak, by miała szerokość zbliżoną do marginesu
+                kat_szprychy = (margines / (r_wew * PI / 180));
+                kat_wyciecia = (360 / liczba_okienek) - kat_szprychy;
+                
+                polygon([
+                    [0, 0],
+                    [r_a * 1.5 * cos(-kat_wyciecia/2), r_a * 1.5 * sin(-kat_wyciecia/2)],
+                    [r_a * 1.5 * cos(kat_wyciecia/2), r_a * 1.5 * sin(kat_wyciecia/2)]
+                ]);
+            }
         }
     }
 }
