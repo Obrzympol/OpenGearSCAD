@@ -38,7 +38,7 @@ Generator bazuje na klasycznych wzorach inżynierii mechanicznej:
 ## 📂 Struktura Projektu
 
 -   `rodzaj_zebatki.scad` – Główny skrypt zębatki z inteligentnymi otworami i profilem.
--   `tester_osiowy.scad` – Skrypt generujący podstawkę do testowania dwóch współpracujących kół.
+-   `tester_rodzaj_zebatek.scad` – Skrypt generujący podstawkę do testowania dwóch współpracujących kół.
 
 ## 📝 Licencja
 
