@@ -1,11 +1,16 @@
 // ==========================================
 // SEKCJA 1: PARAMETRY WEJŚCIOWE
 // ==========================================
-m = 0.5;            // Moduł: decyduje o wielkości zęba (im większy, tym ząb potężniejszy)
-z = 60;             // Liczba zębów: decyduje o średnicy całego koła
-grubosc = 7;        // Grubość (wysokość) zębatki w osi Z
-otwor_os = 8;       // Średnica otworu na wałek/oś silnika
-$fn = 100;          // Jakość: liczba ścianek w okręgach (im więcej, tym gładszy model)
+// Moduł: decyduje o wielkości zęba (im większy, tym ząb potężniejszy)
+m = 0.5;            
+// Liczba zębów: decyduje o średnicy całego koła
+z = 60;     
+// Grubość (wysokość) zębatki w osi Z
+grubosc = 7;  
+// Średnica otworu na wałek/oś silnika
+otwor_os = 8;    
+// Jakość: liczba ścianek w okręgach (im więcej, tym gładszy model)
+$fn = 100;          
 
 // ==========================================
 // SEKCJA 2: OBLICZENIA INŻYNIERYJNE
