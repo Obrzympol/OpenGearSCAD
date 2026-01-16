@@ -22,9 +22,6 @@ Podstawowy typ zębatki do prostych przełożeń. Najszybsza w druku i najłatwi
 
 ### 2. Zębatka Walcowa Skośna (*Helical Gear*)
 Zęby nachylone pod kątem (`kat_skosu`). Zapewnia znacznie cichszą pracę i płynniejsze przenoszenie momentu obrotowego dzięki większej powierzchni styku zębów.
-> **Uwaga:** Aby para kół skośnych współpracowała na równoległych wałkach, jedno koło musi mieć skos dodatni (L), a drugie ujemny (P).
-
-
 
 ### 3. Zębatka Daszkowa / Strzałkowa (*Herringbone Gear*)
 Zaawansowana konstrukcja typu "V". Łączy zalety kół skośnych, ale eliminuje siły osiowe działające na łożyska. Idealna do ekstruderów drukarek 3D i precyzyjnej robotyki.
